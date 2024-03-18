@@ -1,7 +1,3 @@
-/**
- * The example class that has cloning ability. We'll see how the values of field
- * with different types will be cloned.
- */
 class Prototype {
     public primitive: any;
     public component: object;
@@ -9,33 +5,22 @@ class Prototype {
 
     public clone(): this {
         const clone = Object.create(this);
-
         clone.component = Object.create(this.component);
-
-        // Cloning an object that has a nested object with backreference
-        // requires special treatment. After the cloning is completed, the
-        // nested object should point to the cloned object, instead of the
-        // original object. Spread operator can be handy for this case.
         clone.circularReference = {
             ...this.circularReference,
             prototype: { ...this },
         };
-
         return clone;
     }
 }
 
 class ComponentWithBackReference {
     public prototype;
-
     constructor(prototype: Prototype) {
         this.prototype = prototype;
     }
 }
 
-/**
- * The client code.
- */
 function clientCode() {
     const p1 = new Prototype();
     p1.primitive = 245;
@@ -68,3 +53,19 @@ function clientCode() {
 }
 
 clientCode();
+
+/*
+El patrón de diseño Prototype (Prototipo) es un patrón creacional que permite clonar objetos existentes sin hacer que el código dependa de sus clases. Todos los objetos de la clase Prototype tienen la capacidad de clonarse y crear duplicados de sí mismos.
+
+Aquí tienes un desglose del código que proporcionaste:
+
+Prototype: Esta es una clase que declara el método clone(). Este método crea un nuevo objeto que es una copia del objeto Prototype existente. Clona tanto los valores primitivos como los objetos y las referencias circulares.
+
+ComponentWithBackReference: Esta es una clase que tiene una referencia de vuelta al objeto Prototype. Cuando el objeto Prototype se clona, esta referencia también se clona.
+
+clientCode: Esta es una función que crea un objeto Prototype, establece sus propiedades y luego crea una copia de este objeto utilizando el método clone().
+
+La idea es que en lugar de crear nuevos objetos desde cero, puedes crear una copia de un objeto existente. Esto puede ser más eficiente en términos de rendimiento, especialmente si la creación del objeto es una operación costosa.
+
+En tu código, la línea 24 crea una copia del objeto p1 utilizando el método clone(). El objeto clonado p2 tendrá las mismas propiedades que p1, pero será una instancia separada.
+*/
